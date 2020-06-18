@@ -6,7 +6,6 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -18,13 +17,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import br.com.iuridasilva.R;
 import br.com.iuridasilva.agenda.dao.AlunoDAO;
 import br.com.iuridasilva.agenda.model.Aluno;
+import br.com.iuridasilva.agenda.ui.adapter.ListaAlunosAdapter;
 
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
     public static final String TITULO_APPBAR = "Lista de Alunos";
     private final AlunoDAO alunoDAO = new AlunoDAO();
-    private ArrayAdapter<Aluno> adapter;
+    private ListaAlunosAdapter adapter;
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -40,17 +40,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_alunos);
         configurarFabNovoAluno();
         configurarLista();
-        criarAlunosTeste();
-    }
-
-    private void criarAlunosTeste() {
-        //for (int i = 0; i < 10; i++) {
-            alunoDAO.salvar(new Aluno("iuri", "993012250", "iuridasilva@gmail.com"));
-            alunoDAO.salvar(new Aluno("sabrina", "993880189", "sabrina.mello1985@gmail.com"));
-            alunoDAO.salvar(new Aluno("noah", "15092015", "noah.mello.silva@gmail.com"));
-            alunoDAO.salvar(new Aluno("enzo", "26062018", "enzo.mello.silva@gmail.com"));
-       // }
-
     }
 
     @Override
@@ -60,8 +49,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
     }
 
     private void atualizarListaAlunos() {
-        adapter.clear();
-        adapter.addAll(alunoDAO.listarTodos());
+        adapter.atualiza(alunoDAO.listarTodos());
     }
 
     //FAB = floatActionButton
@@ -87,7 +75,10 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
     private void configurarLista() {
         final ListView listaDeAlunos = findViewById(R.id.activity_lista_alunos_listview);
+        //alterado para 2
         configurarAdapter(listaDeAlunos);
+        //
+        //
         configurarListenerClickItem(listaDeAlunos);
         //configurarListenerLongClick(listaDeAlunos);
         registerForContextMenu(listaDeAlunos);
@@ -110,7 +101,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
         if(item.getItemId()== R.id.activity_lista_alunos_menu_remover){
             AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            Aluno alunoEscolhido = adapter.getItem(menuInfo.position);
+            Aluno alunoEscolhido = (Aluno) adapter.getItem(menuInfo.position);
             removerAluno(alunoEscolhido);
         }
 
@@ -132,11 +123,10 @@ public class ListaAlunosActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void configurarAdapter(ListView listaDeAlunos) {
         //adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-        adapter = new ArrayAdapter<>(this, R.layout.item_aluno);
+        //adapter = new ArrayAdapter<>(this, R.layout.item_aluno);
+        adapter = new ListaAlunosAdapter(this);
         listaDeAlunos.setAdapter(adapter);
     }
 }
