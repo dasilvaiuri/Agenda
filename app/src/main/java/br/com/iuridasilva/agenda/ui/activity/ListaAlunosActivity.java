@@ -1,5 +1,8 @@
 package br.com.iuridasilva.agenda.ui.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -98,14 +101,27 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-
         if(item.getItemId()== R.id.activity_lista_alunos_menu_remover){
-            AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            Aluno alunoEscolhido = (Aluno) adapter.getItem(menuInfo.position);
-            removerAluno(alunoEscolhido);
+            confirmarRemocao(item);
         }
 
         return super.onContextItemSelected(item);
+    }
+
+    private void confirmarRemocao(final MenuItem item){
+        new AlertDialog.Builder(this)
+                .setTitle("Removendo aluno")
+                .setMessage("Tem certeza que quer remover este aluno?")
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                        Aluno alunoEscolhido = (Aluno) adapter.getItem(menuInfo.position);
+                        removerAluno(alunoEscolhido);
+                    }
+                })
+                .setNegativeButton("Não", null)
+                .show();
     }
 
     private void removerAluno(Aluno aluno) {
