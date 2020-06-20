@@ -1,7 +1,6 @@
 package br.com.iuridasilva.agenda.ui.activity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +24,7 @@ import br.com.iuridasilva.agenda.ui.adapter.ListaAlunosAdapter;
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
-    public static final String TITULO_APPBAR = "Lista de Alunos";
+    private static final String TITULO_APPBAR = "Lista de Alunos";
     private final AlunoDAO alunoDAO = new AlunoDAO();
     private ListaAlunosAdapter adapter;
 
@@ -58,12 +57,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
     //FAB = floatActionButton
     private void configurarFabNovoAluno() {
         FloatingActionButton botaoNovoAluno = findViewById(R.id.lista_alunos_fab_novo_aluno);
-        botaoNovoAluno.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                abrirFormularioModoInsert();
-            }
-        });
+        botaoNovoAluno.setOnClickListener(v -> abrirFormularioModoInsert());
     }
 
     private void abrirFormularioModoInsert() {
@@ -88,14 +82,11 @@ public class ListaAlunosActivity extends AppCompatActivity {
     }
 
     private void configurarListenerLongClick(ListView listaDeAlunos) {
-        listaDeAlunos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Aluno alunoSelecionado = (Aluno) parent.getItemAtPosition(position);
-                removerAluno(alunoSelecionado);
-                //return true; //retornar true, impede a execução do click normal
-                return false;
-            }
+        listaDeAlunos.setOnItemLongClickListener((parent, view, position, id) -> {
+            Aluno alunoSelecionado = (Aluno) parent.getItemAtPosition(position);
+            removerAluno(alunoSelecionado);
+            //return true; //retornar true, impede a execução do click normal
+            return false;
         });
     }
 
@@ -112,13 +103,10 @@ public class ListaAlunosActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Removendo aluno")
                 .setMessage("Tem certeza que quer remover este aluno?")
-                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                        Aluno alunoEscolhido = (Aluno) adapter.getItem(menuInfo.position);
-                        removerAluno(alunoEscolhido);
-                    }
+                .setPositiveButton("Sim", (dialog, which) -> {
+                    AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                    Aluno alunoEscolhido = (Aluno) adapter.getItem(menuInfo.position);
+                    removerAluno(alunoEscolhido);
                 })
                 .setNegativeButton("Não", null)
                 .show();
@@ -130,12 +118,9 @@ public class ListaAlunosActivity extends AppCompatActivity {
     }
 
     private void configurarListenerClickItem(ListView listaDeAlunos) {
-        listaDeAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Aluno alunoSelecionado = (Aluno) parent.getItemAtPosition(position);
-                abrirFormularioModoEdit(alunoSelecionado);
-            }
+        listaDeAlunos.setOnItemClickListener((parent, view, position, id) -> {
+            Aluno alunoSelecionado = (Aluno) parent.getItemAtPosition(position);
+            abrirFormularioModoEdit(alunoSelecionado);
         });
     }
 

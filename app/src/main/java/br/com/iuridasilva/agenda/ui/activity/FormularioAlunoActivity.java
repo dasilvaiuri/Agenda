@@ -3,8 +3,6 @@ package br.com.iuridasilva.agenda.ui.activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -18,7 +16,7 @@ import static br.com.iuridasilva.agenda.ui.activity.ConstantesActivities.CHAVE_A
 
 public class FormularioAlunoActivity extends AppCompatActivity {
 
-    public static final String TITULO_APPBAR_NOVO_ALUNO = "Novo Aluno";
+    private static final String TITULO_APPBAR_NOVO_ALUNO = "Novo Aluno";
     private static final String TITULO_APPBAR_EDITA_ALUNO = "Edita aluno";
     private EditText campoNome;
     private EditText campoTelefone;
@@ -109,11 +107,4 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         finish(); //finaliza a execução da activity
     }
 
-    private Aluno criarAluno() {
-        String nome = campoNome.getText().toString();
-        String telefone = campoTelefone.getText().toString();
-        String email = campoEmail.getText().toString();
-
-        return new Aluno(nome, telefone, email);
-    }
 }

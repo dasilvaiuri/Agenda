@@ -14,25 +14,28 @@
             android:id="@+id/activity_formulario_aluno_nome"
             android:layout_width="match_parent"
             android:layout_margin="8dp"
-            android:hint="Nome"
+            android:hint="@string/nome"
             android:inputType="textCapWords"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no" />
 
         <EditText
             android:id="@+id/activity_formulario_aluno_telefone"
             android:layout_width="match_parent"
             android:layout_margin="8dp"
-            android:hint="Telefone"
+            android:hint="@string/telefone"
             android:inputType="phone"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no" />
 
         <EditText
             android:id="@+id/activity_formulario_aluno_email"
             android:layout_width="match_parent"
             android:layout_margin="8dp"
-            android:hint="E-mail"
+            android:hint="@string/e_mail"
             android:inputType="textEmailAddress"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no" />
 
         <!--
         <Button android:id="@+id/activity_formulario_aluno_botao_salvar"
