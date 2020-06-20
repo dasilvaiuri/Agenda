@@ -1,13 +1,10 @@
 package br.com.iuridasilva.agenda.ui.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -17,16 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import br.com.iuridasilva.R;
-import br.com.iuridasilva.agenda.dao.AlunoDAO;
 import br.com.iuridasilva.agenda.model.Aluno;
-import br.com.iuridasilva.agenda.ui.adapter.ListaAlunosAdapter;
+import br.com.iuridasilva.agenda.ui.ListaAlunosView;
 
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
     private static final String TITULO_APPBAR = "Lista de Alunos";
-    private final AlunoDAO alunoDAO = new AlunoDAO();
-    private ListaAlunosAdapter adapter;
+    private final ListaAlunosView listaAlunosView = new ListaAlunosView(this);
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -47,12 +42,9 @@ public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        atualizarListaAlunos();
+        listaAlunosView.atualizarListaAlunos();
     }
 
-    private void atualizarListaAlunos() {
-        adapter.atualiza(alunoDAO.listarTodos());
-    }
 
     //FAB = floatActionButton
     private void configurarFabNovoAluno() {
@@ -73,7 +65,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
     private void configurarLista() {
         final ListView listaDeAlunos = findViewById(R.id.activity_lista_alunos_listview);
         //alterado para 2
-        configurarAdapter(listaDeAlunos);
+        listaAlunosView.configurarAdapter(listaDeAlunos);
         //
         //
         configurarListenerClickItem(listaDeAlunos);
@@ -84,7 +76,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
     private void configurarListenerLongClick(ListView listaDeAlunos) {
         listaDeAlunos.setOnItemLongClickListener((parent, view, position, id) -> {
             Aluno alunoSelecionado = (Aluno) parent.getItemAtPosition(position);
-            removerAluno(alunoSelecionado);
+            //listaAlunosView.removerAluno(alunoSelecionado);
             //return true; //retornar true, impede a execução do click normal
             return false;
         });
@@ -93,28 +85,10 @@ public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()== R.id.activity_lista_alunos_menu_remover){
-            confirmarRemocao(item);
+            listaAlunosView.confirmarRemocao(item);
         }
 
         return super.onContextItemSelected(item);
-    }
-
-    private void confirmarRemocao(final MenuItem item){
-        new AlertDialog.Builder(this)
-                .setTitle("Removendo aluno")
-                .setMessage("Tem certeza que quer remover este aluno?")
-                .setPositiveButton("Sim", (dialog, which) -> {
-                    AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                    Aluno alunoEscolhido = (Aluno) adapter.getItem(menuInfo.position);
-                    removerAluno(alunoEscolhido);
-                })
-                .setNegativeButton("Não", null)
-                .show();
-    }
-
-    private void removerAluno(Aluno aluno) {
-        alunoDAO.remove(aluno);
-        adapter.remove(aluno);
     }
 
     private void configurarListenerClickItem(ListView listaDeAlunos) {
@@ -122,12 +96,5 @@ public class ListaAlunosActivity extends AppCompatActivity {
             Aluno alunoSelecionado = (Aluno) parent.getItemAtPosition(position);
             abrirFormularioModoEdit(alunoSelecionado);
         });
-    }
-
-    private void configurarAdapter(ListView listaDeAlunos) {
-        //adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-        //adapter = new ArrayAdapter<>(this, R.layout.item_aluno);
-        adapter = new ListaAlunosAdapter(this);
-        listaDeAlunos.setAdapter(adapter);
     }
 }
